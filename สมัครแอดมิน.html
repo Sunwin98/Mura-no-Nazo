@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>เปิดรับแอดมิน — 村の謎 Kirigakure</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;700;900&family=Shippori+Mincho+B1:wght@400;700;800&family=Sarabun:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --rust:    #7C2D12;
+      --rust2:   #9A3412;
+      --ember:   #C2410C;
+      --gold:    #92400E;
+      --amber:   #B45309;
+      --cream:   #FEF3C7;
+      --fog:     #D6D3D1;
+      --ink:     #0C0A09;
+      --ink2:    #110D0B;
+      --blood:   #450A0A;
+      --paper:   #1C1410;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--ink);
+      color: var(--fog);
+      font-family: 'Sarabun', 'Noto Serif JP', serif;
+      overflow-x: hidden;
+      cursor: default;
+    }
+
+    /* ── Grain overlay ── */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.4;
+    }
+
+    /* ════════════════════════════════
+       HERO
+    ════════════════════════════════ */
+    .hero {
+      position: relative;
+      height: 100vh;
+      min-height: 640px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-bg {
+      position: absolute; inset: 0;
+      background-image: url("บรรยากาศโรล/Minecraft Screenshot 2026.04.15 - 16.37.18.19.png");
+      background-size: cover;
+      background-position: center 40%;
+      transform: scale(1.06);
+      animation: heroZoom 20s ease-in-out infinite alternate;
+      filter: brightness(0.45) saturate(0.7);
+    }
+
+    @keyframes heroZoom {
+      from { transform: scale(1.06) translateX(0px); }
+      to   { transform: scale(1.12) translateX(-12px); }
+    }
+
+    /* Fog layers */
+    .fog-layer {
+      position: absolute; inset: 0;
+      pointer-events: none;
+    }
+
+    .fog-layer::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: -20%; right: -20%;
+      height: 55%;
+      background: linear-gradient(to top,
+        rgba(12,10,9,0.98) 0%,
+        rgba(12,10,9,0.7)  30%,
+        rgba(12,10,9,0.2)  60%,
+        transparent        100%
+      );
+    }
+
+    .fog-layer::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -20%; right: -20%;
+      height: 30%;
+      background: linear-gradient(to bottom,
+        rgba(12,10,9,0.8) 0%,
+        transparent 100%
+      );
+    }
+
+    /* Animated mist strips */
+    .mist-strip {
+      position: absolute;
+      left: -30%; right: -30%;
+      height: 120px;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(214,211,209,0.06) 20%,
+        rgba(214,211,209,0.1) 50%,
+        rgba(214,211,209,0.06) 80%,
+        transparent 100%
+      );
+      filter: blur(12px);
+      border-radius: 50%;
+      animation: mistDrift 18s ease-in-out infinite;
+    }
+
+    .mist-strip:nth-child(2) {
+      bottom: 28%;
+      animation-duration: 22s;
+      animation-delay: -5s;
+      opacity: 0.7;
+      height: 80px;
+    }
+
+    .mist-strip:nth-child(3) {
+      bottom: 38%;
+      animation-duration: 28s;
+      animation-delay: -11s;
+      opacity: 0.5;
+      height: 60px;
+    }
+
+    @keyframes mistDrift {
+      0%   { transform: translateX(-8%) translateY(0px); }
+      33%  { transform: translateX(4%)  translateY(-6px); }
+      66%  { transform: translateX(-3%) translateY(4px); }
+      100% { transform: translateX(-8%) translateY(0px); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      padding: 0 24px;
+      animation: heroFadeIn 1.8s ease-out both;
+    }
+
+    @keyframes heroFadeIn {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0px); }
+    }
+
+    .hero-eyebrow {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.7em;
+      color: var(--ember);
+      text-transform: uppercase;
+      opacity: 0.9;
+      animation: heroFadeIn 1.8s 0.2s ease-out both;
+    }
+
+    .hero-title-jp {
+      font-family: 'Shippori Mincho B1', serif;
+      font-weight: 800;
+      font-size: clamp(3rem, 8vw, 6rem);
+      letter-spacing: 0.2em;
+      color: var(--cream);
+      line-height: 1;
+      text-shadow:
+        0 0 60px rgba(194,65,12,0.5),
+        0 0 20px rgba(194,65,12,0.3),
+        0 4px 16px rgba(0,0,0,0.9);
+      animation: heroFadeIn 1.8s 0.4s ease-out both;
+    }
+
+    .hero-title-th {
+      font-family: 'Sarabun', sans-serif;
+      font-weight: 300;
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      letter-spacing: 0.35em;
+      color: var(--cream);
+      opacity: 0.75;
+      animation: heroFadeIn 1.8s 0.6s ease-out both;
+    }
+
+    .hero-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      width: min(400px, 80vw);
+      animation: heroFadeIn 1.8s 0.8s ease-out both;
+    }
+
+    .hero-divider span {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(194,65,12,0.7), transparent);
+    }
+
+    .hero-divider em {
+      font-style: normal;
+      font-size: 0.65rem;
+      letter-spacing: 0.35em;
+      color: var(--ember);
+      font-family: 'Noto Serif JP', serif;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 28px;
+      border: 1px solid rgba(194,65,12,0.5);
+      background: rgba(124,45,18,0.15);
+      backdrop-filter: blur(4px);
+      animation: heroFadeIn 1.8s 1s ease-out both;
+    }
+
+    .hero-badge-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--ember);
+      animation: blink 2s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    .hero-badge span {
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      color: var(--cream);
+      font-family: 'Sarabun', sans-serif;
+      font-weight: 300;
+    }
+
+    .hero-scroll-hint {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      animation: heroFadeIn 1.8s 1.4s ease-out both;
+      z-index: 10;
+    }
+
+    .hero-scroll-hint p {
+      font-size: 0.6rem;
+      letter-spacing: 0.5em;
+      color: rgba(214,211,209,0.4);
+      font-family: 'Noto Serif JP', serif;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 50px;
+      background: linear-gradient(to bottom, rgba(194,65,12,0.7), transparent);
+      animation: scrollLine 1.8s ease-in-out infinite;
+    }
+
+    @keyframes scrollLine {
+      0%   { transform: scaleY(0); transform-origin: top; opacity: 1; }
+      50%  { transform: scaleY(1); transform-origin: top; opacity: 1; }
+      100% { transform: scaleY(1); transform-origin: bottom; opacity: 0; }
+    }
+
+    /* ════════════════════════════════
+       GALLERY STRIP
+    ════════════════════════════════ */
+    .gallery-section {
+      padding: 0;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .gallery-label {
+      padding: 56px 48px 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .gallery-label .line { flex: 0 0 40px; height: 1px; background: rgba(194,65,12,0.4); }
+    .gallery-label p {
+      font-size: 0.65rem;
+      letter-spacing: 0.65em;
+      color: rgba(194,65,12,0.7);
+      text-transform: uppercase;
+      font-family: 'Noto Serif JP', serif;
+    }
+
+    .gallery-track-wrap {
+      position: relative;
+    }
+
+    /* Fade edges */
+    .gallery-track-wrap::before,
+    .gallery-track-wrap::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 120px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .gallery-track-wrap::before {
+      left: 0;
+      background: linear-gradient(to right, var(--ink), transparent);
+    }
+    .gallery-track-wrap::after {
+      right: 0;
+      background: linear-gradient(to left, var(--ink), transparent);
+    }
+
+    .gallery-track {
+      display: flex;
+      gap: 12px;
+      padding: 0 60px 0 60px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      cursor: grab;
+    }
+    .gallery-track:active { cursor: grabbing; }
+    .gallery-track::-webkit-scrollbar { display: none; }
+
+    .gallery-item {
+      flex-shrink: 0;
+      width: 380px;
+      height: 240px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(124,45,18,0.25);
+      transition: border-color 0.3s, transform 0.4s;
+    }
+
+    .gallery-item:hover {
+      border-color: rgba(194,65,12,0.6);
+      transform: scale(1.02);
+      z-index: 3;
+    }
+
+    .gallery-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: brightness(0.85) saturate(0.9);
+      transition: filter 0.4s, transform 0.6s;
+    }
+
+    .gallery-item:hover img {
+      filter: brightness(1) saturate(1.1);
+      transform: scale(1.04);
+    }
+
+    .gallery-item .overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(12,10,9,0.6) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .gallery-hint {
+      padding: 16px 48px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      opacity: 0.35;
+    }
+
+    .gallery-hint p {
+      font-size: 0.62rem;
+      letter-spacing: 0.3em;
+      color: var(--fog);
+      font-family: 'Noto Serif JP', serif;
+    }
+
+    /* ════════════════════════════════
+       ABOUT SECTION
+    ════════════════════════════════ */
+    .about-section {
+      padding: 100px 48px;
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .about-section { grid-template-columns: 1fr; gap: 40px; padding: 60px 24px; }
+    }
+
+    .about-img {
+      position: relative;
+    }
+
+    .about-img img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      display: block;
+      filter: brightness(0.8) saturate(0.85);
+      border: 1px solid rgba(124,45,18,0.3);
+    }
+
+    .about-img::before {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border: 1px solid rgba(194,65,12,0.15);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .about-img::after {
+      content: '霧隠れ村';
+      position: absolute;
+      bottom: -14px; right: 16px;
+      font-family: 'Noto Serif JP', serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.4em;
+      color: var(--ember);
+      opacity: 0.6;
+    }
+
+    .about-text { display: flex; flex-direction: column; gap: 24px; }
+
+    .section-eyebrow {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.65em;
+      color: var(--ember);
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+
+    .section-title {
+      font-family: 'Shippori Mincho B1', serif;
+      font-weight: 700;
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      color: var(--cream);
+      line-height: 1.3;
+      letter-spacing: 0.05em;
+    }
+
+    .section-body {
+      font-family: 'Sarabun', sans-serif;
+      font-weight: 300;
+      font-size: 1rem;
+      line-height: 2;
+      color: rgba(214,211,209,0.75);
+    }
+
+    .section-body strong {
+      color: var(--cream);
+      font-weight: 600;
+    }
+
+    /* ════════════════════════════════
+       OPEN RECRUIT BANNER
+    ════════════════════════════════ */
+    .recruit-banner {
+      position: relative;
+      overflow: hidden;
+      padding: 80px 48px;
+      text-align: center;
+      border-top: 1px solid rgba(124,45,18,0.2);
+      border-bottom: 1px solid rgba(124,45,18,0.2);
+    }
+
+    .recruit-banner-bg {
+      position: absolute; inset: 0;
+      background-image: url("บรรยากาศโรล/Minecraft Screenshot 2026.04.15 - 16.38.50.55.png");
+      background-size: cover;
+      background-position: center;
+      filter: brightness(0.2) saturate(0.5);
+      transform: scale(1.04);
+    }
+
+    .recruit-banner-overlay {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at center, rgba(124,45,18,0.18) 0%, transparent 70%),
+        linear-gradient(180deg, rgba(12,10,9,0.7) 0%, rgba(12,10,9,0.4) 50%, rgba(12,10,9,0.7) 100%);
+    }
+
+    .recruit-banner-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .recruit-kanji {
+      font-family: 'Shippori Mincho B1', serif;
+      font-size: 5rem;
+      font-weight: 800;
+      color: var(--ember);
+      opacity: 0.15;
+      letter-spacing: 0.3em;
+      line-height: 1;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .recruit-banner-content .big-tag {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.65em;
+      color: var(--ember);
+      text-transform: uppercase;
+    }
+
+    .recruit-banner-content h2 {
+      font-family: 'Sarabun', sans-serif;
+      font-weight: 600;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      color: var(--cream);
+      letter-spacing: 0.05em;
+      line-height: 1.1;
+    }
+
+    .recruit-banner-content p {
+      font-family: 'Sarabun', sans-serif;
+      font-weight: 300;
+      font-size: 1.1rem;
+      color: rgba(214,211,209,0.7);
+      max-width: 520px;
+      line-height: 1.9;
+    }
+
+    .no-limit-badge {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 36px;
+      border: 1px solid rgba(194,65,12,0.45);
+      background: rgba(69,10,10,0.25);
+      backdrop-filter: blur(6px);
+      margin-top: 8px;
+    }
+
+    .no-limit-badge .icon {
+      font-size: 1.1rem;
+      color: var(--ember);
+    }
+
+    .no-limit-badge span {
+      font-family: 'Sarabun', sans-serif;
+      font-weight: 400;
+      font-size: 0.95rem;
+      letter-spacing: 0.08em;
+      color: var(--cream);
+    }
+
+    /* ════════════════════════════════
+       ROLES GRID
+    ════════════════════════════════ */
+    .roles-section {
+      padding: 100px 48px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 768px) {
+      .roles-section { padding: 60px 24px; }
+    }
+
+    .roles-header {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 60px;
+    }
+
+    .roles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 2px;
+    }
+
+    .role-card {
+      position: relative;
+      padding: 40px 36px;
+      background: rgba(28,20,16,0.6);
+      border: 1px solid rgba(124,45,18,0.2);
+      overflow: hidden;
+      transition: border-color 0.35s, background 0.35s;
+      cursor: default;
+    }
+
+    .role-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--ember), transparent);
+      opacity: 0;
+      transition: opacity 0.35s;
+    }
+
+    .role-card:hover {
+      border-color: rgba(194,65,12,0.45);
+      background: rgba(40,20,12,0.8);
+    }
+
+    .role-card:hover::before { opacity: 1; }
+
+    .role-num {
+      font-family: 'Shippori Mincho B1', serif;
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: var(--ember);
+      opacity: 0.08;
+      line-height: 1;
+      position: absolute;
+      top: 24px; right: 24px;
+    }
+
+    .role-icon {
+      display: block;
+      margin-bottom: 20px;
+      width: 32px;
+      height: 32px;
+      line-height: 1;
+    }
+
+    .role-icon svg {
+      display: block;
+    }
+
+    .role-title {
+      font-family: 'Shippori Mincho B1', serif;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--cream);
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    .role-title-jp {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 0.72rem;
+      color: var(--ember);
+      letter-spacing: 0.3em;
+      opacity: 0.8;
+      margin-bottom: 16px;
+    }
+
+    .role-desc {
+      font-family: 'Sarabun', sans-serif;
+      font-weight: 300;
+      font-size: 0.88rem;
+      line-height: 1.85;
+      color: rgba(214,211,209,0.65);
+    }
+
+    .role-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 20px;
+    }
+
+    .role-tag {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      padding: 4px 10px;
+      border: 1px solid rgba(124,45,18,0.4);
+      color: rgba(194,65,12,0.8);
+      font-family: 'Noto Serif JP', serif;
+    }
+
+    /* ════════════════════════════════
+       REQUIREMENTS
+    ════════════════════════════════ */
+    .req-section {
+      background: var(--paper);
+      padding: 100px 48px;
+    }
+
+    @media (max-width: 768px) {
+      .req-section { padding: 60px 24px; }
+    }
+
+    .req-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+    }
+
+    .req-top {
+      display: flex;
+      gap: 60px;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 768px) {
+      .req-top { flex-direction: column; gap: 32px; }
+    }
+
+    .req-main { flex: 1; display: flex; flex-direction: column; gap: 20px; }
+
+    .req-no-limit {
+      flex: 0 0 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 24px;
+      border: 1px solid rgba(194,65,12,0.3);
+      text-align: center;
+      gap: 10px;
+    }
+
+    .req-no-limit .big-jp {
+      font-family: 'Shippori Mincho B1', serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--ember);
+      line-height: 1;
+    }
+
+    .req-no-limit .label {
+      font-family: 'Sarabun', sans-serif;
+      font-weight: 300;
+      font-size: 0.78rem;
+      color: rgba(214,211,209,0.5);
+      letter-spacing: 0.1em;
+    }
+
+    .req-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .req-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(124,45,18,0.15);
+    }
+
+    .req-item:first-child { border-top: 1px solid rgba(124,45,18,0.15); }
+
+    .req-check {
+      flex-shrink: 0;
+      width: 20px; height: 20px;
+      border: 1px solid rgba(194,65,12,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+    }
+
+    .req-check::after {
+      content: '✓';
+      font-size: 0.7rem;
+      color: var(--ember);
+    }
+
+    .req-check.soft { border-color: rgba(124,45,18,0.3); }
+    .req-check.soft::after { color: rgba(194,65,12,0.5); content: '◦'; font-size: 1rem; }
+
+    .req-item-text { display: flex; flex-direction: column; gap: 4px; }
+
+    .req-item-title {
+      font-family: 'Sarabun', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--cream);
+    }
+
+    .req-item-desc {
+      font-family: 'Sarabun', sans-serif;
+      font-weight: 300;
+      font-size: 0.82rem;
+      color: rgba(214,211,209,0.5);
+      line-height: 1.7;
+    }
+
+    /* ════════════════════════════════
+       SECOND GALLERY — FEATURED
+    ════════════════════════════════ */
+    .featured-section {
+      padding: 100px 48px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 768px) {
+      .featured-section { padding: 60px 24px; }
+    }
+
+    .featured-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 8px;
+      margin-top: 48px;
+    }
+
+    @media (max-width: 768px) {
+      .featured-grid { grid-template-columns: 1fr; }
+    }
+
+    .featured-item {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(124,45,18,0.2);
+      transition: border-color 0.3s;
+    }
+
+    .featured-item:hover { border-color: rgba(194,65,12,0.5); }
+
+    .featured-item.large { grid-row: span 2; }
+
+    .featured-item img {
+      width: 100%;
+      height: 100%;
+      min-height: 220px;
+      object-fit: cover;
+      display: block;
+      filter: brightness(0.8) saturate(0.85);
+      transition: filter 0.4s, transform 0.5s;
+    }
+
+    .featured-item.large img { min-height: 460px; }
+
+    .featured-item:hover img {
+      filter: brightness(0.95) saturate(1);
+      transform: scale(1.03);
+    }
+
+    .featured-item .caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 32px 24px 16px;
+      background: linear-gradient(to top, rgba(12,10,9,0.85) 0%, transparent 100%);
+      font-family: 'Noto Serif JP', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.35em;
+      color: rgba(214,211,209,0.5);
+    }
+
+    /* ════════════════════════════════
+       APPLY SECTION
+    ════════════════════════════════ */
+    .apply-section {
+      position: relative;
+      overflow: hidden;
+      padding: 120px 48px;
+      text-align: center;
+    }
+
+    .apply-bg {
+      position: absolute; inset: 0;
+      background-image: url("บรรยากาศโรล/Minecraft Screenshot 2026.04.15 - 16.43.22.58.png");
+      background-size: cover;
+      background-position: center 30%;
+      filter: brightness(0.18) saturate(0.5);
+    }
+
+    .apply-overlay {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 50%, rgba(69,10,10,0.3) 0%, transparent 100%),
+        linear-gradient(180deg, rgba(12,10,9,0.8) 0%, rgba(12,10,9,0.3) 50%, rgba(12,10,9,0.8) 100%);
+    }
+
+    .apply-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .apply-seal {
+      width: 80px; height: 80px;
+      border: 1px solid rgba(194,65,12,0.4);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Shippori Mincho B1', serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--ember);
+      position: relative;
+    }
+
+    .apply-seal::before {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 1px solid rgba(194,65,12,0.2);
+    }
+
+    .apply-content h2 {
+      font-family: 'Sarabun', sans-serif;
+      font-weight: 600;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      color: var(--cream);
+      line-height: 1.2;
+    }
+
+    .apply-content p {
+      font-family: 'Sarabun', sans-serif;
+      font-weight: 300;
+      font-size: 1rem;
+      color: rgba(214,211,209,0.65);
+      line-height: 1.9;
+    }
+
+    .apply-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 48px;
+      background: var(--ember);
+      color: var(--cream);
+      font-family: 'Sarabun', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: 0.2em;
+      text-decoration: none;
+      border: 1px solid transparent;
+      transition: background 0.3s, color 0.3s, border-color 0.3s;
+      cursor: pointer;
+    }
+
+    .apply-btn:hover {
+      background: transparent;
+      border-color: var(--ember);
+      color: var(--ember);
+    }
+
+    .apply-sub {
+      font-size: 0.72rem;
+      letter-spacing: 0.3em;
+      color: rgba(214,211,209,0.3);
+      font-family: 'Noto Serif JP', serif;
+    }
+
+    /* ════════════════════════════════
+       FOOTER
+    ════════════════════════════════ */
+    footer {
+      padding: 40px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(124,45,18,0.15);
+    }
+
+    footer .footer-logo {
+      font-family: 'Shippori Mincho B1', serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: 0.3em;
+      color: var(--cream);
+      opacity: 0.7;
+    }
+
+    footer p {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 0.62rem;
+      letter-spacing: 0.3em;
+      color: rgba(214,211,209,0.25);
+    }
+
+    /* ════════════════════════════════
+       SCROLL REVEAL
+    ════════════════════════════════ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.22s; }
+    .reveal-delay-3 { transition-delay: 0.36s; }
+    .reveal-delay-4 { transition-delay: 0.5s; }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════ HERO ═══════ -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="fog-layer">
+      <div class="mist-strip" style="bottom:32%;"></div>
+      <div class="mist-strip"></div>
+      <div class="mist-strip"></div>
+    </div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Kirigakure Minecraft Roleplay · 霧隠れ村</p>
+      <h1 class="hero-title-jp">村の謎</h1>
+      <p class="hero-title-th">เปิดรับสมาชิกทีมแอดมิน</p>
+      <div class="hero-divider">
+        <span></span>
+        <em>2026</em>
+        <span></span>
+      </div>
+      <div class="hero-badge">
+        <div class="hero-badge-dot"></div>
+        <span>กำลังเปิดรับอยู่ในขณะนี้</span>
+      </div>
+    </div>
+    <div class="hero-scroll-hint">
+      <p>เลื่อนลง</p>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ═══════ GALLERY STRIP ═══════ -->
+  <section class="gallery-section">
+    <div class="gallery-label">
+      <div class="line"></div>
+      <p>บรรยากาศภายในเซิร์ฟเวอร์</p>
+    </div>
+    <div class="gallery-track-wrap">
+      <div class="gallery-track" id="galleryTrack">
+        <div class="gallery-item">
+          <img src="บรรยากาศโรล/Minecraft Screenshot 2026.04.15 - 16.37.18.19.png" alt="ถนนหมู่บ้าน" loading="lazy" />
+          <div class="overlay"></div>
+        </div>
+        <div class="gallery-item">
+          <img src="บรรยากาศโรล/Minecraft Screenshot 2026.04.15 - 16.37.33.57.png" alt="" loading="lazy" />
+          <div class="overlay"></div>
+        </div>
+        <div class="gallery-item">
+          <img src="บรรยากาศโรล/Minecraft Screenshot 2026.04.15 - 16.37.56.89.png" alt="" loading="lazy" />
+          <div class="overlay"></div>
+        </div>
+        <div class="gallery-item">
+          <img src="บรรยากาศโรล/Minecraft Screenshot 2026.04.15 - 16.38.16.01.png" alt="" loading="lazy" />
+          <div class="overlay"></div>
+        </div>
+        <div class="gallery-item">
+          <img src="บรรยากาศโรล/Minecraft Screenshot 2026.04.15 - 16.38.50.55.png" alt="ศาลเจ้า" loading="lazy" />
+          <div class="overlay"></div>
+        </div>
+        <div class="gallery-item">
+          <img src="บรรยากาศโรล/Minecraft Screenshot 2026.04.15 - 16.39.15.33.png" alt="" loading="lazy" />
+          <div class="overlay"></div>
+        </div>
+        <div class="gallery-item">
+          <img src="บรรยากาศโรล/Minecraft Screenshot 2026.04.15 - 16.39.35.71.png" alt="" loading="lazy" />
+          <div class="overlay"></div>
+        </div>
+        <div class="gallery-item">
+          <img src="บรรยากาศโรล/Minecraft Screenshot 2026.04.15 - 16.40.15.44.png" alt="" loading="lazy" />
+          <div class="overlay"></div>
+        </div>
+        <div class="gallery-item">
+          <img src="บรรยากาศโรล/Minecraft Screenshot 2026.04.15 - 16.40.27.16.png" alt="" loading="lazy" />
+          <div class="overlay"></div>
+        </div>
+        <div class="gallery-item">
+          <img src="บรรยากาศโรล/Minecraft Screenshot 2026.04.15 - 16.40.43.74.png" alt="" loading="lazy" />
+          <div class="overlay"></div>
+        </div>
+        <div class="gallery-item">
+          <img src="บรรยากาศโรล/Minecraft Screenshot 2026.04.15 - 16.41.21.54.png" alt="" loading="lazy" />
+          <div class="overlay"></div>
+        </div>
+        <div class="gallery-item">
+          <img src="บรรยากาศโรล/Minecraft Screenshot 2026.04.15 - 16.42.58.24.png" alt="" loading="lazy" />
+          <div class="overlay"></div>
+        </div>
+        <div class="gallery-item">
+          <img src="บรรยากาศโรล/Minecraft Screenshot 2026.04.15 - 16.43.22.58.png" alt="" loading="lazy" />
+          <div class="overlay"></div>
+        </div>
+        <div class="gallery-item">
+          <img src="บรรยากาศโรล/Minecraft Screenshot 2026.04.15 - 16.43.53.96.png" alt="" loading="lazy" />
+          <div class="overlay"></div>
+        </div>
+        <div class="gallery-item">
+          <img src="บรรยากาศโรล/Minecraft Screenshot 2026.04.15 - 16.46.15.14.png" alt="" loading="lazy" />
+          <div class="overlay"></div>
+        </div>
+      </div>
+    </div>
+    <div class="gallery-hint">
+      <p>← ลากเพื่อดูภาพทั้งหมด →</p>
+    </div>
+  </section>
+
+  <!-- ═══════ ABOUT ═══════ -->
+  <div class="about-section">
+    <div class="about-img reveal">
+      <img src="บรรยากาศโรล/Minecraft Screenshot 2026.04.15 - 16.40.43.74.png" alt="หมู่บ้านคิริกาคุเระ" loading="lazy" />
+    </div>
+    <div class="about-text">
+      <p class="section-eyebrow reveal">เกี่ยวกับโปรเจค</p>
+      <h2 class="section-title reveal reveal-delay-1">หมู่บ้านคิริกาคุเระ<br/>หมู่บ้านที่ไม่ยอมปล่อยใครไป</h2>
+      <p class="section-body reveal reveal-delay-2">
+        <strong>村の謎</strong> คือ Minecraft Roleplay แบบ Narrative-driven ที่เล่าเรื่องราวของกลุ่มนักศึกษา 20 คนซึ่งเดินทางมายังหมู่บ้านโบราณกลางหุบเขาหมอก เพื่อทำโครงการวิจัยภาคสนาม — โดยไม่รู้เลยว่าหมู่บ้านแห่งนี้กำลังรอพวกเขาอยู่
+      </p>
+      <p class="section-body reveal reveal-delay-3">
+        เรื่องราวขับเคลื่อนด้วย <strong>3 ฝ่าย</strong> ที่มีเป้าหมายขัดกัน ผู้เล่นจะต้องเก็บเบาะแส อ่านสถานการณ์ และตัดสินใจในจุดที่มีน้ำหนัก เพราะ<strong>ทุกตัวเลือกเปลี่ยนชะตากรรม</strong>
+      </p>
+    </div>
+  </div>
+
+  <!-- ═══════ RECRUIT BANNER ═══════ -->
+  <section class="recruit-banner">
+    <div class="recruit-banner-bg"></div>
+    <div class="recruit-banner-overlay"></div>
+    <div class="recruit-banner-content">
+      <div class="recruit-kanji">募集</div>
+      <p class="big-tag">— Staff Recruitment —</p>
+      <h2>เปิดรับแอดมิน<br/>ไม่จำกัดความสามารถ</h2>
+      <p>เราไม่ได้มองหาคนที่เก่งที่สุด แต่มองหาคนที่<br/><strong style="color:var(--cream)">อยากอยู่ในโปรเจคนี้จริงๆ</strong></p>
+      <div class="no-limit-badge">
+        <span class="icon">無</span>
+        <span>ไม่มีข้อกำหนดด้านทักษะหรือประสบการณ์</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ ROLES ═══════ -->
+  <section class="roles-section">
+    <div class="roles-header">
+      <p class="section-eyebrow reveal">ตำแหน่งที่เปิดรับ</p>
+      <h2 class="section-title reveal reveal-delay-1">บทบาทของแอดมิน</h2>
+    </div>
+    <div class="roles-grid">
+
+      <div class="role-card reveal">
+        <span class="role-num">01</span>
+        <span class="role-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Two masks: comedy + tragedy -->
+            <ellipse cx="11" cy="14" rx="7" ry="8" stroke="#C2410C" stroke-width="1.5" fill="none"/>
+            <path d="M7.5 17.5 Q11 20.5 14.5 17.5" stroke="#C2410C" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+            <circle cx="9" cy="12.5" r="1" fill="#C2410C"/>
+            <circle cx="13" cy="12.5" r="1" fill="#C2410C"/>
+            <ellipse cx="22" cy="16" rx="7" ry="8" stroke="#7C2D12" stroke-width="1.5" fill="none" opacity="0.75"/>
+            <path d="M18.5 19 Q22 16 25.5 19" stroke="#7C2D12" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.75"/>
+            <circle cx="20" cy="14.5" r="1" fill="#7C2D12" opacity="0.75"/>
+            <circle cx="24" cy="14.5" r="1" fill="#7C2D12" opacity="0.75"/>
+          </svg>
+        </span>
+        <div class="role-title">แอดมินรับบท NPC</div>
+        <div class="role-title-jp">NPC 管理者</div>
+        <p class="role-desc">รับบทเป็นชาวบ้าน, ฮารุโอะ, นายน้อย, พระเอ็นคาอิ หรือตัวละครอื่นๆ ในเรื่อง โต้ตอบกับผู้เล่นแบบ Real-time ทำให้โลกในเซิร์ฟมีชีวิต</p>
+        <div class="role-tags">
+          <span class="role-tag">Roleplay</span>
+          <span class="role-tag">Improvisation</span>
+        </div>
+      </div>
+
+      <div class="role-card reveal reveal-delay-1">
+        <span class="role-num">02</span>
+        <span class="role-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- D20 dice shape -->
+            <polygon points="16,3 29,10 29,22 16,29 3,22 3,10" stroke="#C2410C" stroke-width="1.5" fill="none"/>
+            <polygon points="16,3 29,10 16,14" stroke="#C2410C" stroke-width="0.8" fill="none" opacity="0.5"/>
+            <polygon points="16,3 3,10 16,14" stroke="#C2410C" stroke-width="0.8" fill="none" opacity="0.5"/>
+            <polygon points="3,10 16,14 3,22" stroke="#C2410C" stroke-width="0.8" fill="none" opacity="0.5"/>
+            <polygon points="29,10 16,14 29,22" stroke="#C2410C" stroke-width="0.8" fill="none" opacity="0.5"/>
+            <polygon points="3,22 16,14 16,29" stroke="#C2410C" stroke-width="0.8" fill="none" opacity="0.5"/>
+            <polygon points="29,22 16,14 16,29" stroke="#C2410C" stroke-width="0.8" fill="none" opacity="0.5"/>
+            <text x="16" y="18" text-anchor="middle" font-size="7" fill="#C2410C" font-family="serif" font-weight="700">20</text>
+          </svg>
+        </span>
+        <div class="role-title">แอดมิน Game Master</div>
+        <div class="role-title-jp">GM · 進行係</div>
+        <p class="role-desc">ควบคุมการดำเนินเหตุการณ์, ตัดสินผลของ Choice ผู้เล่น, จัดฉากเหตุการณ์พิเศษ และควบคุมจังหวะของเรื่องให้ไหลลื่น</p>
+        <div class="role-tags">
+          <span class="role-tag">Storytelling</span>
+          <span class="role-tag">Decision Making</span>
+        </div>
+      </div>
+
+      <div class="role-card reveal reveal-delay-2">
+        <span class="role-num">03</span>
+        <span class="role-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Torii gate silhouette -->
+            <rect x="4" y="9" width="24" height="2.5" rx="1" fill="#C2410C"/>
+            <rect x="6" y="13" width="20" height="2" rx="1" fill="#C2410C" opacity="0.7"/>
+            <rect x="8" y="15" width="2.5" height="13" rx="1" fill="#C2410C"/>
+            <rect x="21.5" y="15" width="2.5" height="13" rx="1" fill="#C2410C"/>
+            <!-- Mist lines below -->
+            <line x1="3" y1="30" x2="14" y2="30" stroke="#9A3412" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+            <line x1="17" y1="30" x2="29" y2="30" stroke="#9A3412" stroke-width="1" stroke-linecap="round" opacity="0.3"/>
+          </svg>
+        </span>
+        <div class="role-title">แอดมินบรรยากาศ</div>
+        <div class="role-title-jp">雰囲気 · Atmosphere</div>
+        <p class="role-desc">รับผิดชอบเสียง, แสง, อากาศ, และ Effect ต่างๆ ในเซิร์ฟ ทำให้ทุกฉากรู้สึก "อยู่ในหมู่บ้านจริงๆ" ไม่ใช่แค่เล่น Minecraft</p>
+        <div class="role-tags">
+          <span class="role-tag">Technical</span>
+          <span class="role-tag">Creative</span>
+        </div>
+      </div>
+
+      <div class="role-card reveal reveal-delay-3">
+        <span class="role-num">04</span>
+        <span class="role-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Scroll -->
+            <rect x="7" y="5" width="18" height="22" rx="2" stroke="#C2410C" stroke-width="1.5" fill="none"/>
+            <path d="M7 7 Q4 7 4 10 Q4 13 7 13" stroke="#C2410C" stroke-width="1.2" fill="none"/>
+            <path d="M25 7 Q28 7 28 10 Q28 13 25 13" stroke="#C2410C" stroke-width="1.2" fill="none"/>
+            <!-- Text lines on scroll -->
+            <line x1="10" y1="11" x2="22" y2="11" stroke="#C2410C" stroke-width="1" stroke-linecap="round" opacity="0.7"/>
+            <line x1="10" y1="14.5" x2="22" y2="14.5" stroke="#C2410C" stroke-width="1" stroke-linecap="round" opacity="0.7"/>
+            <line x1="10" y1="18" x2="18" y2="18" stroke="#C2410C" stroke-width="1" stroke-linecap="round" opacity="0.7"/>
+            <!-- Quill tip -->
+            <path d="M20 21 L26 13 L24 12 L18 20 Z" stroke="#C2410C" stroke-width="1" fill="rgba(194,65,12,0.15)"/>
+            <line x1="20" y1="21" x2="19" y2="24" stroke="#C2410C" stroke-width="1" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <div class="role-title">แอดมินเนื้อเรื่อง</div>
+        <div class="role-title-jp">脚本 · Writer</div>
+        <p class="role-desc">ช่วยเสริมรายละเอียดเนื้อเรื่อง เขียน Lore เพิ่มเติม ออกแบบเบาะแส จดหมาย หรือบทสนทนา NPC ให้สมบูรณ์ยิ่งขึ้น</p>
+        <div class="role-tags">
+          <span class="role-tag">Writing</span>
+          <span class="role-tag">Lore Design</span>
+        </div>
+      </div>
+
+      <div class="role-card reveal">
+        <span class="role-num">05</span>
+        <span class="role-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Hammer -->
+            <rect x="5" y="9" width="14" height="8" rx="1.5" stroke="#C2410C" stroke-width="1.5" fill="none"/>
+            <rect x="11" y="13" width="16" height="3" rx="1.5" stroke="#C2410C" stroke-width="1.2" fill="rgba(194,65,12,0.12)"/>
+            <!-- Handle -->
+            <line x1="19" y1="14.5" x2="28" y2="26" stroke="#C2410C" stroke-width="2" stroke-linecap="round"/>
+            <!-- Decorative block mark -->
+            <rect x="6" y="10" width="4" height="6" rx="0.5" fill="rgba(194,65,12,0.2)"/>
+          </svg>
+        </span>
+        <div class="role-title">แอดมิน Builder</div>
+        <div class="role-title-jp">建設 · Builder</div>
+        <p class="role-desc">สร้างและปรับแต่งโลกในเซิร์ฟ เพิ่มรายละเอียดให้หมู่บ้าน สร้างฉากพิเศษสำหรับเหตุการณ์ใหม่ หรือซ่อมแซมส่วนที่ยังขาด</p>
+        <div class="role-tags">
+          <span class="role-tag">Building</span>
+          <span class="role-tag">Design</span>
+        </div>
+      </div>
+
+      <div class="role-card reveal reveal-delay-1">
+        <span class="role-num">06</span>
+        <span class="role-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Three people / community -->
+            <circle cx="16" cy="9" r="3.5" stroke="#C2410C" stroke-width="1.4" fill="none"/>
+            <path d="M9 27 Q9 20 16 20 Q23 20 23 27" stroke="#C2410C" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+            <circle cx="7" cy="13" r="2.5" stroke="#C2410C" stroke-width="1.2" fill="none" opacity="0.6"/>
+            <path d="M3 27 Q3 22 7 22 Q9.5 22 11 23.5" stroke="#C2410C" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.6"/>
+            <circle cx="25" cy="13" r="2.5" stroke="#C2410C" stroke-width="1.2" fill="none" opacity="0.6"/>
+            <path d="M29 27 Q29 22 25 22 Q22.5 22 21 23.5" stroke="#C2410C" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.6"/>
+          </svg>
+        </span>
+        <div class="role-title">แอดมิน Community</div>
+        <div class="role-title-jp">管理 · Moderator</div>
+        <p class="role-desc">ดูแล Discord, ตอบคำถามผู้สมัคร, ช่วยประสานงานระหว่างทีม และสร้างบรรยากาศชุมชนให้ดีก่อนและหลัง Session</p>
+        <div class="role-tags">
+          <span class="role-tag">Community</span>
+          <span class="role-tag">Communication</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════ REQUIREMENTS ═══════ -->
+  <section class="req-section">
+    <div class="req-inner">
+      <div>
+        <p class="section-eyebrow reveal">คุณสมบัติ</p>
+        <h2 class="section-title reveal reveal-delay-1" style="margin-top:12px">สิ่งที่เราต้องการจริงๆ</h2>
+      </div>
+      <div class="req-top">
+        <div class="req-main">
+          <div class="req-list">
+            <div class="req-item reveal">
+              <div class="req-check"></div>
+              <div class="req-item-text">
+                <div class="req-item-title">มีเวลาเข้าร่วม Session อย่างน้อยสัปดาห์ละครั้ง</div>
+                <div class="req-item-desc">ไม่ต้องออนไลน์ตลอด แค่แจ้งล่วงหน้าได้ถ้าไม่ว่าง ทุกคนเข้าใจกัน</div>
+              </div>
+            </div>
+            <div class="req-item reveal reveal-delay-1">
+              <div class="req-check"></div>
+              <div class="req-item-text">
+                <div class="req-item-title">อ่านและเข้าใจโครงเรื่องหลักของโปรเจค</div>
+                <div class="req-item-desc">ไม่ต้องจำทุกอย่าง แต่ควรรู้ว่าตัวละครหลักคือใคร และฝ่ายไหนมีเป้าหมายอะไร</div>
+              </div>
+            </div>
+            <div class="req-item reveal reveal-delay-2">
+              <div class="req-check"></div>
+              <div class="req-item-text">
+                <div class="req-item-title">สื่อสารกับทีมได้ผ่าน Discord</div>
+                <div class="req-item-desc">ไม่จำเป็นต้องพูดไมค์ตลอด ข้อความก็ได้ แค่ให้ทีมรู้ว่าคุณอยู่ด้วย</div>
+              </div>
+            </div>
+            <div class="req-item reveal reveal-delay-3">
+              <div class="req-check soft"></div>
+              <div class="req-item-text">
+                <div class="req-item-title">มีความสนใจในเรื่องราว, ญี่ปุ่น, หรือ Roleplay</div>
+                <div class="req-item-desc">(ไม่บังคับ) แต่ถ้าคุณชอบเรื่องแบบนี้อยู่แล้ว มันจะทำให้สนุกมากขึ้นหลายเท่า</div>
+              </div>
+            </div>
+            <div class="req-item reveal">
+              <div class="req-check soft"></div>
+              <div class="req-item-text">
+                <div class="req-item-title">มีประสบการณ์ Minecraft หรือ Roleplay มาก่อน</div>
+                <div class="req-item-desc">(ไม่บังคับเลย) เราสอนได้ทุกอย่าง ขอแค่อยากเรียนรู้</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="req-no-limit reveal reveal-delay-2">
+          <div class="big-jp">無限</div>
+          <div class="label">ไม่จำกัดความสามารถ<br/>ไม่จำกัดประสบการณ์</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ FEATURED GALLERY ═══════ -->
+  <section class="featured-section">
+    <p class="section-eyebrow reveal">เลือกภาพเด่น</p>
+    <h2 class="section-title reveal reveal-delay-1" style="margin-top:12px">ภายในหมู่บ้านคิริกาคุเระ</h2>
+    <div class="featured-grid">
+      <div class="featured-item large reveal">
+        <img src="บรรยากาศโรล/Minecraft Screenshot 2026.04.15 - 16.38.50.55.png" alt="ศาลเจ้าและรูปปั้น" loading="lazy" />
+        <div class="caption">ภายในหมู่บ้าน · 狛犬</div>
+      </div>
+      <div class="featured-item reveal reveal-delay-1">
+        <img src="บรรยากาศโรล/Minecraft Screenshot 2026.04.15 - 16.42.58.24.png" alt="" loading="lazy" />
+        <div class="caption">ภายในหมู่บ้าน</div>
+      </div>
+      <div class="featured-item reveal reveal-delay-2">
+        <img src="บรรยากาศโรล/Minecraft Screenshot 2026.04.15 - 16.46.15.14.png" alt="" loading="lazy" />
+        <div class="caption">บรรยากาศยามเย็น</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ APPLY ═══════ -->
+  <section class="apply-section">
+    <div class="apply-bg"></div>
+    <div class="apply-overlay"></div>
+    <div class="apply-content">
+      <div class="apply-seal reveal">封</div>
+      <h2 class="reveal reveal-delay-1">พร้อมเข้าร่วม<br/>คิริกาคุเระแล้วหรือยัง?</h2>
+      <p class="reveal reveal-delay-2">
+        แค่ส่งข้อความมาหาเราใน Discord บอกว่าสนใจตำแหน่งไหน และอยากมาร่วมทำอะไร — ไม่ต้องมี Portfolio ไม่ต้องมีประสบการณ์
+      </p>
+      <a href="https://discord.gg/sZtPA85B" class="apply-btn reveal reveal-delay-3">
+        สมัครเข้าร่วมทีม
+      </a>
+      <p class="apply-sub reveal reveal-delay-4">村の謎 · Mura no Nazo · 霧隠れ村</p>
+    </div>
+  </section>
+
+  <!-- ═══════ FOOTER ═══════ -->
+  <footer>
+    <div class="footer-logo">村の謎</div>
+    <p>Kirigakure · Minecraft Roleplay · 2026</p>
+  </footer>
+
+  <script>
+    // ── Drag-to-scroll gallery ──
+    const track = document.getElementById('galleryTrack');
+    let isDragging = false, startX, scrollLeft;
+
+    track.addEventListener('mousedown', e => {
+      isDragging = true;
+      startX = e.pageX - track.offsetLeft;
+      scrollLeft = track.scrollLeft;
+      track.style.cursor = 'grabbing';
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      track.style.cursor = 'grab';
+    });
+
+    track.addEventListener('mousemove', e => {
+      if (!isDragging) return;
+      e.preventDefault();
+      const x = e.pageX - track.offsetLeft;
+      const walk = (x - startX) * 1.6;
+      track.scrollLeft = scrollLeft - walk;
+    });
+
+    // ── Scroll reveal ──
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    reveals.forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

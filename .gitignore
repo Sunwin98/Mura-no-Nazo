@@ -1,1 +1,9 @@
 ﻿*.mp4
+
+# Story/admin content - local only, not for public repo
+addon Rojiura by bright/
+หมู่บ้าน/
+coverage/
+*.md
+*.txt
+โปสเตอร์แอดมิน.html
